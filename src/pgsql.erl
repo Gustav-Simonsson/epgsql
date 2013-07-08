@@ -105,9 +105,9 @@ with_transaction(C, F) ->
         {ok, [], []} = squery(C, "COMMIT"),
         R
     catch
-        _:Why ->
+        Error:Reason ->
             squery(C, "ROLLBACK"),
-            {rollback, Why}
+            {rollback, {Error, Reason, erlang:get_stacktrace()}}
     end.
 
 %% -- internal functions --
