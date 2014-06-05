@@ -200,10 +200,10 @@ with_transaction(C, F) ->
         {ok, [], []} = squery(C, "COMMIT"),
         R
     catch
-        _:Why ->
+        Error:Reason ->
             squery(C, "ROLLBACK"),
             %% TODO hides error stacktrace
-            {rollback, Why}
+            {rollback, {Error, Reason, erlang:get_stacktrace()}}
     end.
 
 sync_on_error(C, Error = {error, _}) ->
@@ -212,4 +212,3 @@ sync_on_error(C, Error = {error, _}) ->
 
 sync_on_error(_C, R) ->
     R.
-
